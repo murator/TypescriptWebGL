@@ -10,8 +10,17 @@ namespace TSE {
     public start(): void {
       this._canvas = GlUtilities.initialize('canvas');
       gl?.clearColor(0, 0, 0, 1);
-
       this.loop();
+    }
+
+    /**
+     * Resizes the canvas to fit the window
+     */
+    public resize(): void {
+      if(this._canvas !== undefined) {
+        this._canvas.height = window.innerHeight;
+        this._canvas.width = window.innerWidth;
+      }
     }
 
     private loop(): void {
