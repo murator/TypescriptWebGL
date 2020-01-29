@@ -22,6 +22,7 @@
     "eslint-config-prettier": "^6.10.0",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
+    "tslint-config-standard": "^9.0.0",
     "tsutils": "^3.17.1",
     "typescript": "^3.7.5"
   }
