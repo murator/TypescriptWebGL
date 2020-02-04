@@ -4,7 +4,8 @@ namespace TSE {
     private _count = 0;
     private _canvas: HTMLCanvasElement;
     private _shader: Shader;
-    private _buffer: GLBuffer; // a container for data to be pushed to the graphics carcd
+    private _sprite: Sprite;
+    private _projection: Matrix4x4;
 
     public constructor() {
     }
@@ -19,7 +20,12 @@ namespace TSE {
 
       console.log('this._shader', this._shader);
 
-      this.createBuffer();
+      this._projection = Matrix4x4.orthographic(0, this._canvas.width, 0, this._canvas.height, -100.0, 100.0);
+      // this.createBuffer();
+      // load sprite
+      this._sprite = new Sprite('test');
+      this._sprite.load();
+      this._sprite.position.x = 0;
 
       this.resize();
       this.loop();
@@ -34,43 +40,29 @@ namespace TSE {
         this._canvas.height = window.innerHeight;
         this._canvas.width = window.innerWidth;
 
-        gl.viewport( 0, 0, window.innerWidth, window.innerHeight );
+        // This is the full default viewport NDC (Normalized Device Coordinates) coords.
+        // The max area of the screen (off screen also), this also guarantees the aspect ratio of the screen
+        gl.viewport(-1, 1, 1, -1);
       }
     }
 
     private loop(): void {
-      gl.clear( gl.COLOR_BUFFER_BIT );
+      gl.clear(gl.COLOR_BUFFER_BIT);
 
       // Set uniforms.
-      const colorPosition = this._shader.getUniformLocation( "u_color" );
-      gl.uniform4f( colorPosition, 1, 0.5, 0, 1 );
+      const colorPosition = this._shader.getUniformLocation('u_color');
+      gl.uniform4f(colorPosition, 1, 0.5, 0, 1);
 
-      this._buffer.bind();
-      this._buffer.draw();
+      const projectionPosition = this._shader.getUniformLocation('u_projection');
+      gl.uniformMatrix4fv(projectionPosition, false, new Float32Array(this._projection.data));
 
-      requestAnimationFrame( this.loop.bind( this ) );
-    }
+      const modelLocation = this._shader.getUniformLocation('u_model');
+      gl.uniformMatrix4fv(modelLocation, false, new Float32Array(Matrix4x4.translation(this._sprite.position).data));
 
-    private createBuffer(): void {
-      this._buffer = new GLBuffer( 3 );
+      // draw sprite
+      this._sprite.draw();
 
-      const positionAttribute = new AttributeInfo();
-      positionAttribute.location = this._shader.getAttributeLocation( "a_position" );
-      positionAttribute.offset = 0;
-      positionAttribute.size = 3;
-      this._buffer.addAttributeLocation( positionAttribute );
-
-      // x,y,z point in 3d space
-      // z axis is always on 0 on a 2d screen
-      const vertices = [
-        0, 0, 0,
-        0, 0.5, 0,
-        0.5, 0.5, 0
-      ];
-
-      this._buffer.pushBackData( vertices );
-      this._buffer.upload();
-      this._buffer.unbind();
+      requestAnimationFrame(this.loop.bind(this));
     }
 
     /**
@@ -79,8 +71,11 @@ namespace TSE {
     private loadShaders(): void {
       const vertexShaderSource = `
 attribute vec3 a_position;
+uniform mat4 u_projection;
+uniform mat4 u_model;
+
 void main() {
-    gl_Position = vec4(a_position, 1.0);
+    gl_Position = u_projection * u_model * vec4(a_position, 1.0);
 }`;
 
       const fragmentShaderSource = `
@@ -91,7 +86,7 @@ void main() {
 }
 `;
 
-      this._shader = new Shader( "basic", vertexShaderSource, fragmentShaderSource );
+      this._shader = new Shader('basic', vertexShaderSource, fragmentShaderSource);
     }
   }
 }
