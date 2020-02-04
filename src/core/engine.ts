@@ -18,14 +18,13 @@ namespace TSE {
       this.loadShaders();
       this._shader.use();
 
-      console.log('this._shader', this._shader);
-
       this._projection = Matrix4x4.orthographic(0, this._canvas.width, 0, this._canvas.height, -100.0, 100.0);
       // this.createBuffer();
       // load sprite
       this._sprite = new Sprite('test');
       this._sprite.load();
-      this._sprite.position.x = 0;
+      this._sprite.position.x = 20;
+      this._sprite.position.y = 100;
 
       this.resize();
       this.loop();
@@ -36,7 +35,6 @@ namespace TSE {
      */
     public resize(): void {
       if (this._canvas !== undefined) {
-        console.log('this._canvas is there, resize?');
         this._canvas.height = window.innerHeight;
         this._canvas.width = window.innerWidth;
 
