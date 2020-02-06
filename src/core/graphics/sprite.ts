@@ -3,11 +3,11 @@ namespace TSE {
     private _width: number;
     private _height: number;
     private _name: string;
-    private _textureName: string;
+    private _materialName: string;
 
     // A container for data to be pushed to the graphics card
     private _buffer: GLBuffer;
-    private _texture: Texture;
+    private _material: Material;
 
     // Position of the sprite
     public position: Vector3 = new Vector3(0, 0, 0);
@@ -15,16 +15,16 @@ namespace TSE {
     /**
      * Creates a new sprite
      * @param name
-     * @param textureName
+     * @param materialName
      * @param width
      * @param height
      */
-    constructor(name: string, textureName: string, width = 100, height = 100) {
+    constructor(name: string, materialName: string, width = 100, height = 100) {
       this._name = name;
       this._width = width;
       this._height = height;
-      this._textureName = textureName;
-      this._texture = TextureManager.getTexture(this._textureName);
+      this._materialName = materialName;
+      this._material = MaterialManager.getMaterial(this._materialName);
     }
 
     public get name() {
@@ -33,7 +33,9 @@ namespace TSE {
 
     public destroy(): void {
       this._buffer.destroy();
-      TextureManager.releaseTexture(this._textureName);
+      MaterialManager.releaseMaterial(this._materialName);
+      this._material = undefined;
+      this._materialName = undefined;
     }
 
     public load(): void {
@@ -90,11 +92,13 @@ namespace TSE {
       gl.uniformMatrix4fv(modelLocation, false, new Float32Array(Matrix4x4.translation(this.position).data));
 
       const colorLocation = shader.getUniformLocation('u_tint');
-      gl.uniform4f(colorLocation, 1, 0.5, 0, 1);
-      // gl.uniform4f(colorLocation, 1, 1, 1, 1); // temp
+      if(this._material !== undefined) {
+        gl.uniform4fv(colorLocation, this._material.tint.toFloat32Array());
+        if (this._material.diffuseTexture !== undefined) {
+          this._material.diffuseTexture.activateAndBind(0);
+        }
+      }
 
-      // console.log('shader', shader);
-      this._texture.activateAndBind(0);
       const diffuseLocation = shader.getUniformLocation('u_diffuse');
       gl.uniform1i(diffuseLocation, 0);
 

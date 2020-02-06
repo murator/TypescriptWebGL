@@ -11,12 +11,12 @@ namespace TSE {
 
   export class MaterialManager {
 
-    private static _materials: {[name: string]: MaterialReferenceNode};
+    private static _materials: {[name: string]: MaterialReferenceNode} = {};
 
     private constructor() {
     }
 
-    public registerMaterial(material: Material): void {
+    public static registerMaterial(material: Material): void {
       if(MaterialManager._materials[material.name] === undefined) {
         MaterialManager._materials[material.name] = new MaterialReferenceNode(material);
       }
@@ -27,6 +27,7 @@ namespace TSE {
         return undefined;
       } else {
         MaterialManager._materials[materialName].referenceCount++;
+        console.log('MaterialManager._materials[materialName].material', MaterialManager._materials[materialName].material);
         return MaterialManager._materials[materialName].material;
       }
     }

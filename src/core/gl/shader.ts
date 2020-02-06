@@ -59,7 +59,7 @@ namespace TSE {
     }
 
     protected load(vertexSrc: string, fragmentSrc: string): void {
-      console.log('Loading shader', vertexSrc, fragmentSrc);
+      console.log('Loading shader');
       const vertexShader = this.loadShader(vertexSrc, gl.VERTEX_SHADER);
       const fragmentShader = this.loadShader(fragmentSrc, gl.FRAGMENT_SHADER);
 

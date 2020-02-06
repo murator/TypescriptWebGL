@@ -10,13 +10,15 @@ namespace TSE {
       this._diffuseTextureName = diffuseTextureName;
       this._tint = tint;
 
-      if (this._diffuseTextureName !== undefined) {
-        TextureManager.releaseTexture(this._diffuseTextureName);
-      }
+      this._diffuseTexture = TextureManager.getTexture(this._diffuseTextureName);
     }
 
     get name(): string {
       return this._name;
+    }
+
+    get diffuseTexture(): Texture {
+      return this._diffuseTexture;
     }
 
     get diffuseTextureName(): string {
