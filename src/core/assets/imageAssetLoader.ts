@@ -4,6 +4,8 @@ namespace TSE {
     public data: HTMLImageElement;
 
     public constructor(name: string, data: HTMLImageElement) {
+      console.log('name', name);
+      console.log('data', data);
       this.name = name;
       this.data = data;
     }
@@ -25,6 +27,7 @@ namespace TSE {
       let image: HTMLImageElement = new Image();
       image.onload = this.onImageLoaded.bind(this, assetName, image);
       image.src = assetName;
+      console.log('loadAsset', image);
     }
 
     private onImageLoaded(assetName: string, image: HTMLImageElement): void {

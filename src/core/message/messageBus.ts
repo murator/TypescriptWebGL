@@ -8,7 +8,7 @@ namespace TSE {
     };
 
     public static addSubscription(code: string, handler: IMessageHandler): void {
-      if (MessageBus._subscriptions[code] !== undefined) {
+      if (MessageBus._subscriptions[code] === undefined) {
         MessageBus._subscriptions[code] = [];
       }
 
@@ -55,6 +55,7 @@ namespace TSE {
       const messageLimit = Math.min(MessageBus._normalQueueMessagePerUpdate, MessageBus._normalMessageQueue.length);
       for (let i = 0; i < messageLimit; i++) {
         let node = MessageBus._normalMessageQueue.pop();
+        console.log('MSGBUS update', node.message);
         node.handler.onMessage(node.message);
       }
     }

@@ -2,7 +2,7 @@ namespace TSE {
   /**
    * WebGL Shader
    */
-  export class Shader {
+  export abstract class Shader {
     private readonly _name: string;
     private _program: WebGLProgram;
     private _attributes: { [name: string]: number } = {};
@@ -14,14 +14,8 @@ namespace TSE {
      * @param vertexSrc The source of the VertexShader
      * @param fragmentSrc The source of the FragmentShader
      */
-    constructor(name: string, vertexSrc: string, fragmentSrc: string) {
+    constructor(name: string) {
       this._name = name;
-      const vertexShader = this.loadShader(vertexSrc, gl.VERTEX_SHADER);
-      const fragmentShader = this.loadShader(fragmentSrc, gl.FRAGMENT_SHADER);
-
-      this.createProgram(vertexShader, fragmentShader);
-      this.detectAttributes();
-      this.detectUniforms();
     }
 
     /**
@@ -64,6 +58,17 @@ namespace TSE {
       return this._uniforms[name];
     }
 
+    protected load(vertexSrc: string, fragmentSrc: string): void {
+      console.log('Loading shader', vertexSrc, fragmentSrc);
+      const vertexShader = this.loadShader(vertexSrc, gl.VERTEX_SHADER);
+      const fragmentShader = this.loadShader(fragmentSrc, gl.FRAGMENT_SHADER);
+
+      this.createProgram(vertexShader, fragmentShader);
+
+      this.detectAttributes();
+      this.detectUniforms();
+    }
+
     /**
      * Create and compile a shader of specified src and type
      * @param src
@@ -86,6 +91,7 @@ namespace TSE {
 
     private createProgram(vertexShader: WebGLShader, fragmentShader: WebGLShader): void {
       this._program = gl.createProgram();
+      console.log('this._program', this._program);
 
       if (this._program) {
         gl.attachShader(this._program, vertexShader);
