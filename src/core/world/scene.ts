@@ -2,7 +2,7 @@ namespace TSE {
   export class Scene {
     private readonly _root: SimObject;
 
-    private constructor() {
+    constructor() {
       this._root = new SimObject(0, '__ROOT__', this);
     }
 

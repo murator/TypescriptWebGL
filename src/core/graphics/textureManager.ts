@@ -9,7 +9,7 @@ namespace TSE {
     constructor(texture: Texture) {
       this.texture = texture;
 
-      console.log('TextureReferenceNode', texture);
+      // console.log('TextureReferenceNode', texture);
     }
   }
 

@@ -9,6 +9,7 @@ SimObject - In world object
     - Children SimObject[]
     - Parent (ref)
     - Scene (ref)
+    - Components (ref)
     
 Zone
     - Id
@@ -16,14 +17,30 @@ Zone
     - Description
     - Scene
         - SimObjects
+    - Components (provide a method to display something on the screen)
 
 ZoneManager
 
 Scene
-    SimObject
+    SimObject <- just a container without any logic or render
         SO1
         SO2
             SO1
             SO2
             SO3
         SO3
+        
+Zone States
+    uninitialized
+    loading
+    updating
+
+Attaching a component to a Simobject holding a sprite and drawing that instead drawing a sprite directly.
+
+Component
+    - name
+    - simObject
+    - update/render
+    
+SpriteComponent
+    - Sprite

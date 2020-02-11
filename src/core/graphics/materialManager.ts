@@ -27,7 +27,7 @@ namespace TSE {
         return undefined;
       } else {
         MaterialManager._materials[materialName].referenceCount++;
-        console.log('MaterialManager._materials[materialName].material', MaterialManager._materials[materialName].material);
+        // console.log('MaterialManager._materials[materialName].material', MaterialManager._materials[materialName].material);
         return MaterialManager._materials[materialName].material;
       }
     }

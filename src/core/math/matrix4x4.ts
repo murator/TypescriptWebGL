@@ -1,87 +1,127 @@
 namespace TSE {
 
-  /**
-   *  everything in wegGl is in 3d
-   *  a projection matrix functions as the eye or camera as point in space
-   *  near clipping plane and far clipping plane
-   *  the near clipping plane is the least amount of distance close to the eye that makes sence to render
-   *  the far clipping plane the most far away
-   *  an object sitting between these two planes in 3d is translated into 2d by those two planes (perspective)
-   *  everything outside that is not rendered at all
-   *  a matrix is a two dimensional array (columns, rows)
-   */
+  /** A 4x4 matrix to be used for transformations. */
   export class Matrix4x4 {
+
     private _data: number[] = [];
 
+    /** Creates a new matrix 4x4. Marked as private to enforce the use of static methods. */
     private constructor() {
-
-      // identity matrix, the default version
       this._data = [
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1
+        1.0, 0, 0, 0,
+        0, 1.0, 0, 0,
+        0, 0, 1.0, 0,
+        0, 0, 0, 1.0
       ];
     }
 
+    /** Returns the data contained in this matrix as an array of numbers. */
     public get data(): number[] {
       return this._data;
     }
 
-    // Use a static method to return the default with a direct call
+    /** Creates and returns an identity matrix. */
     public static identity(): Matrix4x4 {
       return new Matrix4x4();
     }
 
-    // An orthographic projection matrix renders everything as if it flat in space
-    // It allows you to see exactly where points fall in the world on the x and y axis without perspective
-    public static orthographic(left: number, right: number, bottom: number, top: number, nearClip: number, farClip: number): Matrix4x4 {
-      const m = new Matrix4x4();
-      const lr: number = 1.0 / (left - right);
-      const bt: number = 1.0 / (bottom - top);
-      const nf: number = 1.0 / (nearClip - farClip);
+    /**
+     * Creates and returns a new orthographic projection matrix.
+     * @param left The left extents of the viewport.
+     * @param right The right extents of the viewport.
+     * @param bottom The bottom extents of the viewport.
+     * @param top The top extents of the viewport.
+     * @param nearClip The near clipping plane.
+     * @param farClip The far clipping plane.
+     */
+    public static orthographic( left: number, right: number, bottom: number, top: number, nearClip: number, farClip: number ): Matrix4x4 {
+      let m = new Matrix4x4();
 
-      // Translate the 1's in the first 3 rows
+      let lr: number = 1.0 / ( left - right );
+      let bt: number = 1.0 / ( bottom - top );
+      let nf: number = 1.0 / ( nearClip - farClip );
+
       m._data[0] = -2.0 * lr;
+
       m._data[5] = -2.0 * bt;
+
       m._data[10] = 2.0 * nf;
 
-      // Translate all elements except the last 1 in the last row
-      m._data[12] = (left + right) * lr;
-      m._data[13] = (top + bottom) * bt;
-      m._data[14] = (farClip + nearClip) * nf;
+      m._data[12] = ( left + right ) * lr;
+      m._data[13] = ( top + bottom ) * bt;
+      m._data[14] = ( farClip + nearClip ) * nf;
 
       return m;
     }
 
-    // A representation of movement in space
-    public static translation(position: Vector3): Matrix4x4 {
-      const m = new Matrix4x4();
+    /**
+     * Creates a transformation matrix using the provided position.
+     * @param position The position to be used in transformation.
+     */
+    public static translation( position: Vector3 ): Matrix4x4 {
+      let m = new Matrix4x4();
 
-      m._data[12] =  position.x;
-      m._data[13] =  position.y;
-      m._data[14] =  position.z;
+      m._data[12] = position.x;
+      m._data[13] = position.y;
+      m._data[14] = position.z;
 
       return m;
     }
 
-    // Rotate on the axis pointing into the screen, 0 -> PI = radian = 180 deg
-    public static rotationZ(angleInRadians: number): Matrix4x4 {
-      const m = new Matrix4x4();
+    public static rotationX( angleInRadians: number ): Matrix4x4 {
+      let m = new Matrix4x4();
 
-      const c = Math.cos(angleInRadians);
-      const s = Math.sin(angleInRadians);
+      let c = Math.cos( angleInRadians );
+      let s = Math.sin( angleInRadians );
+
+      m._data[5] = c;
+      m._data[6] = s;
+      m._data[9] = -s;
+      m._data[10] = c;
+
+      return m;
+    }
+
+    public static rotationY( angleInRadians: number ): Matrix4x4 {
+      let m = new Matrix4x4();
+
+      let c = Math.cos( angleInRadians );
+      let s = Math.sin( angleInRadians );
+
+      m._data[0] = c;
+      m._data[2] = -s;
+      m._data[8] = s;
+      m._data[10] = c;
+
+      return m;
+    }
+
+    public static rotationZ( angleInRadians: number ): Matrix4x4 {
+      let m = new Matrix4x4();
+
+      let c = Math.cos( angleInRadians );
+      let s = Math.sin( angleInRadians );
 
       m._data[0] = c;
       m._data[1] = s;
-      m._data[5] = -s;
-      m._data[6] = c;
+      m._data[4] = -s;
+      m._data[5] = c;
 
       return m;
     }
 
-    public static scale(scale: Vector3): Matrix4x4 {
-      const m = new Matrix4x4();
+    public static rotationXYZ( xRadians: number, yRadians: number, zRadians: number ): Matrix4x4 {
+      let rx = Matrix4x4.rotationX( xRadians );
+      let ry = Matrix4x4.rotationY( yRadians );
+      let rz = Matrix4x4.rotationZ( zRadians );
+
+      // ZYX
+      return Matrix4x4.multiply( Matrix4x4.multiply( rz, ry ), rx );
+    }
+
+
+    public static scale( scale: Vector3 ): Matrix4x4 {
+      let m = new Matrix4x4();
 
       m._data[0] = scale.x;
       m._data[5] = scale.y;
@@ -90,8 +130,8 @@ namespace TSE {
       return m;
     }
 
-    public static multiply(a: Matrix4x4, b: Matrix4x4): Matrix4x4 {
-      let m =  new Matrix4x4();
+    public static multiply( a: Matrix4x4, b: Matrix4x4 ): Matrix4x4 {
+      let m = new Matrix4x4();
 
       let b00 = b._data[0 * 4 + 0];
       let b01 = b._data[0 * 4 + 1];
@@ -144,6 +184,17 @@ namespace TSE {
       m._data[15] = b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33;
 
       return m;
+    }
+
+    /** Returns the data of this matrix as a Float32Array. */
+    public toFloat32Array(): Float32Array {
+      return new Float32Array( this._data );
+    }
+
+    public copyFrom( m: Matrix4x4 ): void {
+      for ( let i = 0; i < 16; ++i ) {
+        this._data[i] = m._data[i];
+      }
     }
   }
 }

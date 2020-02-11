@@ -3,14 +3,14 @@ namespace TSE {
     private _width: number;
     private _height: number;
     private _name: string;
-    private _materialName: string;
 
     // A container for data to be pushed to the graphics card
     private _buffer: GLBuffer;
     private _material: Material;
+    private _materialName: string;
 
     // Position of the sprite
-    public position: Vector3 = new Vector3(0, 0, 0);
+    // public position: Vector3 = new Vector3(0, 0, 0);
 
     /**
      * Creates a new sprite
@@ -39,19 +39,19 @@ namespace TSE {
     }
 
     public load(): void {
-      this._buffer = new GLBuffer( 5 ); // was 3 -> 5 after adding U,V
+      this._buffer = new GLBuffer(5); // was 3 -> 5 after adding U,V
 
       const positionAttribute = new AttributeInfo();
       positionAttribute.location = 0; // this._shader.getAttributeLocation( "a_position" );
       positionAttribute.offset = 0;
       positionAttribute.size = 3;
-      this._buffer.addAttributeLocation( positionAttribute );
+      this._buffer.addAttributeLocation(positionAttribute);
 
       const texCoordAttribute = new AttributeInfo();
       texCoordAttribute.location = 1;
       texCoordAttribute.offset = 3;
       texCoordAttribute.size = 2;
-      this._buffer.addAttributeLocation( texCoordAttribute );
+      this._buffer.addAttributeLocation(texCoordAttribute);
 
       // x,y,z point in 3d space
       // z axis is always on 0 on a 2d screen
@@ -77,7 +77,7 @@ namespace TSE {
         0, 0, 0, 0, 0
       ];
 
-      this._buffer.pushBackData( vertices );
+      this._buffer.pushBackData(vertices);
       this._buffer.upload();
       this._buffer.unbind();
     }
@@ -86,21 +86,19 @@ namespace TSE {
 
     }
 
-    public draw(shader: Shader): void {
+    public draw(shader: Shader, model: Matrix4x4): void {
       // Set uniforms.
       const modelLocation = shader.getUniformLocation('u_model');
-      gl.uniformMatrix4fv(modelLocation, false, new Float32Array(Matrix4x4.translation(this.position).data));
+      gl.uniformMatrix4fv(modelLocation, false, model.toFloat32Array());
 
       const colorLocation = shader.getUniformLocation('u_tint');
-      if(this._material !== undefined) {
-        gl.uniform4fv(colorLocation, this._material.tint.toFloat32Array());
-        if (this._material.diffuseTexture !== undefined) {
-          this._material.diffuseTexture.activateAndBind(0);
-        }
-      }
+      gl.uniform4fv(colorLocation, this._material.tint.toFloat32Array());
 
-      const diffuseLocation = shader.getUniformLocation('u_diffuse');
-      gl.uniform1i(diffuseLocation, 0);
+      if (this._material.diffuseTexture !== undefined) {
+        this._material.diffuseTexture.activateAndBind(0);
+        let diffuseLocation = shader.getUniformLocation('u_diffuse');
+        gl.uniform1i(diffuseLocation, 0);
+      }
 
       this._buffer.bind();
       this._buffer.draw();

@@ -27,9 +27,9 @@ namespace TSE {
       gl.texImage2D(gl.TEXTURE_2D, LEVEL, gl.RGBA, 1, 1, BORDER, gl.RGBA, gl.UNSIGNED_BYTE, TEMP_IMAGE_DATA);
 
       const asset = AssetManager.getAsset(this.name) as ImageAsset;
-      console.log('Get the asset from the assetmanager', asset);
+      // console.log('Get the asset from the assetmanager', asset);
       if (asset !== undefined) {
-        console.log('Get the texture from the given asset');
+        // console.log('Get the texture from the given asset');
         this.loadTextureFormAsset(asset);
       }
     }
@@ -68,9 +68,9 @@ namespace TSE {
     }
 
     public onMessage(message: Message): void {
-      console.log('onMessage', message);
+      // console.log('onMessage', message);
       if (message.code === MESSAGE_ASSET_LOADER_ASSET_LOADED + this._name) {
-        console.log('MATCHED MESSAGE');
+        // console.log('MATCHED MESSAGE');
         this.loadTextureFormAsset(message.sender as ImageAsset);
       }
     }
@@ -79,7 +79,7 @@ namespace TSE {
       this._width = asset.width;
       this._height = asset.height;
 
-      console.log('asset', asset);
+      // console.log('asset', asset);
 
       this.bind();
 

@@ -13,7 +13,7 @@ namespace TSE {
       }
 
       if (MessageBus._subscriptions[code].indexOf(handler) !== -1 ) {
-        console.warn('Attempting to add a duplicate handler to code', code);
+        // console.warn('Attempting to add a duplicate handler to code', code);
       } else {
         MessageBus._subscriptions[code].push(handler);
       }
@@ -21,7 +21,7 @@ namespace TSE {
 
     public static removeSubscriptions(code: string, handler: IMessageHandler): void {
       if (MessageBus._subscriptions[code] === undefined) {
-        console.warn('Cannot unsubscribe handler from code', code, 'code is not subscribed to');
+        // console.warn('Cannot unsubscribe handler from code', code, 'code is not subscribed to');
         return;
       }
 
@@ -32,7 +32,7 @@ namespace TSE {
     }
 
     public static post(message: Message): void {
-      console.log('Message posted', message);
+      // console.log('Message posted', message);
       let handlers = MessageBus._subscriptions[message.code];
       if(handlers === undefined) {
         return;
@@ -55,7 +55,7 @@ namespace TSE {
       const messageLimit = Math.min(MessageBus._normalQueueMessagePerUpdate, MessageBus._normalMessageQueue.length);
       for (let i = 0; i < messageLimit; i++) {
         let node = MessageBus._normalMessageQueue.pop();
-        console.log('MSGBUS update', node.message);
+        // console.log('MSGBUS update', node.message);
         node.handler.onMessage(node.message);
       }
     }

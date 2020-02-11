@@ -17,7 +17,7 @@ namespace TSE {
     }
 
     public static onAssetLoaded(asset: IAsset): void {
-      console.log('onAssetLoaded', asset);
+      // console.log('onAssetLoaded', asset);
       AssetManager._loadedAssets[asset.name] = asset;
       Message.send(MESSAGE_ASSET_LOADER_ASSET_LOADED + asset.name, this, asset);
     }
@@ -35,18 +35,18 @@ namespace TSE {
     }
 
     public static isAssetLoaded(assetName: string): boolean {
-      console.log('isAssetLoaded', assetName);
+      // console.log('isAssetLoaded', assetName);
       return AssetManager._loadedAssets[assetName] !== undefined;
     }
 
     public static getAsset(assetName: string): IAsset {
-      console.log('assetName', assetName);
+      // console.log('assetName', assetName);
       // return the asset if it was loaded, otherwise load the asset and return undefined
       if(AssetManager._loadedAssets[assetName] !== undefined) {
-        console.log('getAsset already loaded');
+        // console.log('getAsset already loaded');
         return AssetManager._loadedAssets[assetName];
       } else {
-        console.log('getAsset loading the asset');
+        // console.log('getAsset loading the asset');
         AssetManager.loadAsset(assetName);
       }
 

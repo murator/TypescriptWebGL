@@ -59,7 +59,7 @@ namespace TSE {
     }
 
     protected load(vertexSrc: string, fragmentSrc: string): void {
-      console.log('Loading shader');
+      // console.log('Loading shader');
       const vertexShader = this.loadShader(vertexSrc, gl.VERTEX_SHADER);
       const fragmentShader = this.loadShader(fragmentSrc, gl.FRAGMENT_SHADER);
 
@@ -91,7 +91,7 @@ namespace TSE {
 
     private createProgram(vertexShader: WebGLShader, fragmentShader: WebGLShader): void {
       this._program = gl.createProgram();
-      console.log('this._program', this._program);
+      // console.log('Shader createProgram');
 
       if (this._program) {
         gl.attachShader(this._program, vertexShader);

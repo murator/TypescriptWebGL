@@ -4,8 +4,6 @@ namespace TSE {
     private _count = 0;
     private _canvas: HTMLCanvasElement;
     private _basicShader: BasicShader;
-    private _spriteA: Sprite;
-    private _spriteB: Sprite;
     private _projection: Matrix4x4;
 
     public constructor() {
@@ -24,19 +22,11 @@ namespace TSE {
       MaterialManager.registerMaterial(new Material('concrete', 'assets/textures/concrete.jpg', new Color(12, 128, 0, 255)));
       MaterialManager.registerMaterial(new Material('grass', 'assets/textures/grass.jpg', new Color(12, 255, 45, 255)));
 
+      let zoneId = ZoneManager.createTestZone();
+
       this._projection = Matrix4x4.orthographic(0, this._canvas.width, this._canvas.height, 0, -100.0, 100.0);
 
-      this._spriteA = new Sprite('wall', 'concrete', 400, 100);
-      this._spriteA.load();
-      this._spriteA.position.x = 400;
-      this._spriteA.position.y = 100;
-
-      this._spriteB = new Sprite('grass', 'grass', 400, 100);
-      this._spriteB.load();
-      this._spriteB.position.x = 0;
-      this._spriteB.position.y = 0;
-
-      console.log('this._sprite', this._spriteB);
+      ZoneManager.changeZone(zoneId);
 
       this.resize();
       this.loop();
@@ -59,15 +49,14 @@ namespace TSE {
 
     private loop(): void {
       MessageBus.update(0);
+      ZoneManager.update(0);
 
       gl.clear(gl.COLOR_BUFFER_BIT);
 
+      ZoneManager.render(this._basicShader);
+
       const projectionPosition = this._basicShader.getUniformLocation('u_projection');
       gl.uniformMatrix4fv(projectionPosition, false, new Float32Array(this._projection.data));
-
-      // draw sprite
-      this._spriteA.draw(this._basicShader);
-      this._spriteB.draw(this._basicShader);
 
       requestAnimationFrame(this.loop.bind(this));
     }
