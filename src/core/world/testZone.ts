@@ -33,7 +33,8 @@ namespace TSE {
 
       this._parentObject.transform.rotation.z += 0.01;
       this._testObject.transform.rotation.z += 0.01;
-      this._testObject.transform.rotation.y += 0.01;
+      this._testObject.transform.rotation.y += 0.02;
+      this._testObject.transform.rotation.x += 0.03;
 
       super.update( time );
     }

@@ -1,0 +1,35 @@
+{
+  "id": 0,
+  "name": "TestZone",
+  "description": "A simple test zone",
+  "objects": [
+    {
+      "name": "parentObject",
+      "transform": {
+        "position": {
+          "x": 300,
+          "y": 300
+        }
+      },
+      "children": [
+        {
+          "name": "testObject",
+          "transform": {
+            "position": {
+              "x": 120,
+              "y": 120,
+              "z": 120
+            },
+            "rotation": {
+              "x": 120
+            },
+            "scale": {
+              "x": 5,
+              "y": 5
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

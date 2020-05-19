@@ -1,6 +1,6 @@
 namespace TSE {
   export class MessageBus {
-    private static _subscriptions: { [code: string]: IMessageHandler[] } = {};
+    private static _subscriptions: {[code: string]: IMessageHandler[]} = {};
     private static _normalQueueMessagePerUpdate: number = 10;
     private static _normalMessageQueue: MessageSubscriptionNode[] = [];
 
@@ -12,7 +12,7 @@ namespace TSE {
         MessageBus._subscriptions[code] = [];
       }
 
-      if (MessageBus._subscriptions[code].indexOf(handler) !== -1 ) {
+      if (MessageBus._subscriptions[code].indexOf(handler) !== -1) {
         // console.warn('Attempting to add a duplicate handler to code', code);
       } else {
         MessageBus._subscriptions[code].push(handler);
@@ -26,7 +26,7 @@ namespace TSE {
       }
 
       const nodeIndex = MessageBus._subscriptions[code].indexOf(handler);
-      if (nodeIndex !== -1 ) {
+      if (nodeIndex !== -1) {
         MessageBus._subscriptions[code].splice(nodeIndex, 1);
       }
     }
@@ -34,12 +34,12 @@ namespace TSE {
     public static post(message: Message): void {
       // console.log('Message posted', message);
       let handlers = MessageBus._subscriptions[message.code];
-      if(handlers === undefined) {
+      if (handlers === undefined) {
         return;
       }
 
-      for(let h of handlers) {
-        if(message.priority === MessagePriority.HIGH) {
+      for (let h of handlers) {
+        if (message.priority === MessagePriority.HIGH) {
           h.onMessage(message);
         } else {
           MessageBus._normalMessageQueue.push(new MessageSubscriptionNode(message, h));
@@ -48,7 +48,7 @@ namespace TSE {
     }
 
     public static update(time: number): void {
-      if(MessageBus._normalMessageQueue.length === 0) {
+      if (MessageBus._normalMessageQueue.length === 0) {
         return;
       }
 
@@ -56,7 +56,9 @@ namespace TSE {
       for (let i = 0; i < messageLimit; i++) {
         let node = MessageBus._normalMessageQueue.pop();
         // console.log('MSGBUS update', node.message);
-        node.handler.onMessage(node.message);
+        if (node.handler !== undefined) {
+          node.handler.onMessage(node.message);
+        }
       }
     }
   }

@@ -12,6 +12,7 @@ namespace TSE {
     public start(): void {
       this._canvas = GLUtilities.initialize();
       AssetManager.initialize();
+      ZoneManager.initialize();
 
       gl.clearColor(0, 0, 0, 1);
 
@@ -22,11 +23,12 @@ namespace TSE {
       MaterialManager.registerMaterial(new Material('concrete', 'assets/textures/concrete.jpg', new Color(12, 128, 0, 255)));
       MaterialManager.registerMaterial(new Material('grass', 'assets/textures/grass.jpg', new Color(12, 255, 45, 255)));
 
-      let zoneId = ZoneManager.createTestZone();
+      //let zoneId = ZoneManager.createTestZone();
 
       this._projection = Matrix4x4.orthographic(0, this._canvas.width, this._canvas.height, 0, -100.0, 100.0);
 
-      ZoneManager.changeZone(zoneId);
+      // TODO: change to be read from a game config file
+      ZoneManager.changeZone(0);
 
       this.resize();
       this.loop();

@@ -35,7 +35,7 @@ Zone States
     loading
     updating
 
-Attaching a component to a Simobject holding a sprite and drawing that instead drawing a sprite directly.
+Attaching a component to a SimObject holding a sprite and drawing that instead drawing a sprite directly.
 
 Component
     - name

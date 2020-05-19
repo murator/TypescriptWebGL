@@ -9,7 +9,9 @@ namespace TSE {
     }
 
     public static initialize(): void {
+      console.log('AssetManager initialize');
       AssetManager._loaders.push(new ImageAssetLoader());
+      AssetManager._loaders.push(new JsonAssetLoader());
     }
 
     public static registerLoader(loader: IAssetLoader): void {
@@ -17,7 +19,7 @@ namespace TSE {
     }
 
     public static onAssetLoaded(asset: IAsset): void {
-      // console.log('onAssetLoaded', asset);
+      console.log('onAssetLoaded', asset);
       AssetManager._loadedAssets[asset.name] = asset;
       Message.send(MESSAGE_ASSET_LOADER_ASSET_LOADED + asset.name, this, asset);
     }

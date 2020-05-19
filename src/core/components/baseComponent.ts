@@ -1,11 +1,12 @@
 namespace TSE {
-  export class BaseComponent {
+  export class BaseComponent implements IComponent{
     protected _owner: SimObject;
+    protected _data: IComponentData;
 
     public name: string;
 
-    constructor(name: string) {
-      this.name = name;
+    constructor(data: IComponentData) {
+      this._data = data;
     }
 
     public setOwner(owner: SimObject): void {

@@ -1,7 +1,29 @@
 namespace TSE {
-  export class SpriteComponent extends BaseComponent {
+  export class SpriteComponentData implements IComponentData{
+    public name: string;
+    public materialName: string;
 
+    public setFromJson(json: any): void {
+      if(json.name !== undefined) {
+        this.name = json.name;
+      }
+      if(json.materialName !== undefined) {
+        this.materialName = json.materialName;
+      }
+    }
+  }
+
+  export class SpriteComponentBuilder implements IComponentBuilder {
+    readonly type: string;
+
+    buildFromJson(json: any): void {
+    }
+
+  }
+
+  export class SpriteComponent extends BaseComponent {
     private _sprite: Sprite;
+    private _data: SpriteComponentData;
 
     constructor(name: string, materialName: string) {
       super(name);
