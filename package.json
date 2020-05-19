@@ -11,15 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "tslib": "^1.10.0"
+    "tslib": "^1.13.0"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.0",
-    "@types/node": "^13.5.1",
-    "@typescript-eslint/eslint-plugin": "^2.18.0",
-    "@typescript-eslint/parser": "^2.18.0",
-    "jest": "^25.1.0",
+    "@types/jest": "^25.2.3",
+    "@types/node": "^13.13.6",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "jest": "^25.5.4",
     "tsutils": "^3.17.1",
-    "typescript": "^3.7.5"
+    "typescript": "^3.9.2"
   }
 }
